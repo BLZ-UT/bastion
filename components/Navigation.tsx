@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronDown, Menu, X, Gauge } from 'lucide-react'
+import { ChevronDown, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { sectorConfig } from '@/data/companies'
+import Logo from '@/components/Logo'
 
 const sectors = Object.values(sectorConfig)
 
@@ -26,10 +27,10 @@ export default function Navigation() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-8 h-8 border-2 border-accent/50 bg-bg-elevated flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all">
-              <Gauge className="w-4 h-4 text-accent" />
+              <Logo className="w-4 h-4 text-accent" />
             </div>
-            <span className="font-display font-bold text-lg tracking-[0.15em] text-txt-primary uppercase">
-              InfraAnalysis
+            <span className="font-display font-bold text-lg tracking-[0.1em] text-txt-primary">
+              infra<span className="text-accent">A</span>nalysis
             </span>
           </Link>
 

@@ -10,6 +10,28 @@ const FETCH_TIMEOUT_MS = 4_500
 
 const feedCache = new Map<string, { data: NewsItem[]; expires: number }>()
 
+/** Reputable outlets only — major business/financial press and established tech
+ *  publications that actually cover these sectors with editorial standards, rather
+ *  than an open web search that can surface low-quality or unreliable sites. */
+const TRUSTED_SOURCES = [
+  'wsj.com',
+  'ft.com',
+  'nytimes.com',
+  'bloomberg.com',
+  'reuters.com',
+  'axios.com',
+  'techcrunch.com',
+  'theinformation.com',
+  'cnbc.com',
+  'barrons.com',
+  'economist.com',
+]
+
+function scopeToTrustedSources(query: string): string {
+  const sites = TRUSTED_SOURCES.map((domain) => `site:${domain}`).join(' OR ')
+  return `${query} (${sites})`
+}
+
 function decodeEntities(str: string): string {
   return str
     .replace(/<!\[CDATA\[(.*?)\]\]>/g, '$1')
@@ -52,7 +74,8 @@ export async function getSectorNews(query: string, limit = 5): Promise<NewsItem[
   const cached = feedCache.get(query)
   if (cached && cached.expires > Date.now()) return cached.data
 
-  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=en-US&gl=US&ceid=US:en`
+  const scopedQuery = scopeToTrustedSources(query)
+  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(scopedQuery)}&hl=en-US&gl=US&ceid=US:en`
 
   try {
     const controller = new AbortController()

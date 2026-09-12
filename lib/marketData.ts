@@ -18,10 +18,17 @@ export interface LiveCompany extends Company {
 }
 
 const QUOTE_TTL_MS = 60_000
-const FETCH_TIMEOUT_MS = 4_500
+const FETCH_TIMEOUT_MS = 6_000
 const BATCH_SIZE = 8
 
 const quoteCache = new Map<string, { data: LiveQuote; expires: number }>()
+
+const BROWSER_HEADERS: HeadersInit = {
+  'User-Agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+  Accept: 'text/html,application/json,text/plain,*/*',
+  'Accept-Language': 'en-US,en;q=0.9',
+}
 
 function deadQuote(): LiveQuote {
   return {
@@ -36,11 +43,11 @@ function deadQuote(): LiveQuote {
   }
 }
 
-async function fetchWithTimeout(url: string): Promise<Response | null> {
+async function fetchWithTimeout(url: string, headers?: HeadersInit): Promise<Response | null> {
   try {
     const controller = new AbortController()
     const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
-    const res = await fetch(url, { signal: controller.signal, cache: 'no-store' })
+    const res = await fetch(url, { signal: controller.signal, cache: 'no-store', headers })
     clearTimeout(timer)
     return res.ok ? res : null
   } catch {
@@ -48,15 +55,17 @@ async function fetchWithTimeout(url: string): Promise<Response | null> {
   }
 }
 
-/** Stooq daily history CSV: Date,Open,High,Low,Close,Volume — free, no API key. */
-async function fetchDailyHistory(ticker: string): Promise<{ date: string; close: number }[] | null> {
+type DailyRow = { date: string; close: number }
+
+/** Primary source: Stooq's free daily-history CSV (Date,Open,High,Low,Close,Volume). */
+async function fetchFromStooq(ticker: string): Promise<DailyRow[] | null> {
   const symbol = `${ticker.toLowerCase()}.us`
   const url = `https://stooq.com/q/d/l/?s=${symbol}&i=d`
-  const res = await fetchWithTimeout(url)
+  const res = await fetchWithTimeout(url, BROWSER_HEADERS)
   if (!res) return null
 
   const text = await res.text()
-  if (!text || text.startsWith('N/D') || /exceeded/i.test(text)) return null
+  if (!text || text.startsWith('N/D') || /exceeded/i.test(text) || /<html/i.test(text)) return null
 
   const lines = text.trim().split('\n')
   if (lines.length < 3) return null
@@ -65,15 +74,48 @@ async function fetchDailyHistory(ticker: string): Promise<{ date: string; close:
     .slice(1)
     .map((line) => {
       const cols = line.split(',')
-      const close = parseFloat(cols[4])
-      return { date: cols[0], close }
+      return { date: cols[0], close: parseFloat(cols[4]) }
     })
     .filter((r) => r.date && Number.isFinite(r.close))
 
   return rows.length > 0 ? rows : null
 }
 
-function closeNTradingDaysAgo(rows: { date: string; close: number }[], n: number): number | null {
+/** Fallback source: Yahoo Finance's public chart endpoint. Used when Stooq is
+ *  unreachable or blocked (both are unofficial, keyless feeds — having two
+ *  independent providers makes the "live" data meaningfully more reliable). */
+async function fetchFromYahoo(ticker: string): Promise<DailyRow[] | null> {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?range=1y&interval=1d`
+  const res = await fetchWithTimeout(url, BROWSER_HEADERS)
+  if (!res) return null
+
+  try {
+    const json = await res.json()
+    const result = json?.chart?.result?.[0]
+    const timestamps: number[] | undefined = result?.timestamp
+    const closes: (number | null)[] | undefined = result?.indicators?.quote?.[0]?.close
+    if (!timestamps || !closes) return null
+
+    const rows = timestamps
+      .map((ts, i) => {
+        const close = closes[i]
+        if (close === null || close === undefined) return null
+        const date = new Date(ts * 1000).toISOString().slice(0, 10)
+        return { date, close }
+      })
+      .filter((r): r is DailyRow => r !== null)
+
+    return rows.length > 0 ? rows : null
+  } catch {
+    return null
+  }
+}
+
+async function fetchDailyHistory(ticker: string): Promise<DailyRow[] | null> {
+  return (await fetchFromStooq(ticker)) ?? (await fetchFromYahoo(ticker))
+}
+
+function closeNTradingDaysAgo(rows: DailyRow[], n: number): number | null {
   const idx = rows.length - 1 - n
   return idx >= 0 ? rows[idx].close : null
 }

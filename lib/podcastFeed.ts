@@ -2,6 +2,7 @@ export interface LiveEpisode {
   title: string
   podcastName: string
   link: string
+  audioUrl: string | null
   artworkUrl: string | null
   releaseDate: string | null
   durationMs: number | null
@@ -18,6 +19,8 @@ interface ItunesResult {
   artistName?: string
   trackViewUrl?: string
   collectionViewUrl?: string
+  episodeUrl?: string
+  previewUrl?: string
   artworkUrl600?: string
   artworkUrl160?: string
   releaseDate?: string
@@ -48,6 +51,9 @@ export async function getLivePodcastEpisodes(query: string, limit = 5): Promise<
         title: r.trackName ?? '',
         podcastName: r.collectionName ?? r.artistName ?? 'Unknown podcast',
         link: r.trackViewUrl ?? r.collectionViewUrl ?? '',
+        // episodeUrl is the actual episode audio file; previewUrl (a short clip) is
+        // the fallback when a feed doesn't expose the full file to iTunes' index.
+        audioUrl: r.episodeUrl ?? r.previewUrl ?? null,
         artworkUrl: r.artworkUrl600 ?? r.artworkUrl160 ?? null,
         releaseDate: r.releaseDate ?? null,
         durationMs: r.trackTimeMillis ?? null,

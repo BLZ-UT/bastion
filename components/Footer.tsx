@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Gauge } from 'lucide-react'
 import { sectorConfig } from '@/data/companies'
+import Logo from '@/components/Logo'
 
 export default function Footer() {
   const sectors = Object.values(sectorConfig)
@@ -14,10 +14,10 @@ export default function Footer() {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 border-2 border-accent/50 bg-bg-elevated flex items-center justify-center">
-                <Gauge className="w-4 h-4 text-accent" />
+                <Logo className="w-4 h-4 text-accent" />
               </div>
-              <span className="font-display font-bold text-base tracking-[0.15em] text-txt-primary uppercase">
-                InfraAnalysis
+              <span className="font-display font-bold text-base tracking-[0.1em] text-txt-primary">
+                infra<span className="text-accent">A</span>nalysis
               </span>
             </Link>
             <p className="text-sm text-txt-secondary leading-relaxed">
@@ -80,7 +80,7 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-txt-muted font-mono">
-            © {new Date().getFullYear()} INFRAANALYSIS. Infrastructure Intelligence.
+            © {new Date().getFullYear()} infraAnalysis. Infrastructure Intelligence.
           </p>
           <p className="text-xs text-txt-dim font-mono">
             Live market data · For informational use only

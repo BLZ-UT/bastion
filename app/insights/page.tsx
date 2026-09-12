@@ -4,7 +4,7 @@ import InsightCard from '@/components/InsightCard'
 import MarketPulse from '@/components/MarketPulse'
 
 export const dynamic = 'force-dynamic'
-export const metadata = { title: 'Insights — INFRAANALYSIS' }
+export const metadata = { title: 'Insights — infraAnalysis' }
 
 export default function InsightsPage() {
   const featured = insights.filter((i) => i.featured)

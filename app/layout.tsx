@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'INFRAANALYSIS — Infrastructure Intelligence',
+  title: 'infraAnalysis — Infrastructure Intelligence',
   description:
     'Live public market intelligence for critical infrastructure: Energy, Defense, AI Infrastructure, Space, and Cybersecurity.',
   keywords: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     'comps',
   ],
   openGraph: {
-    title: 'INFRAANALYSIS — Infrastructure Intelligence',
+    title: 'infraAnalysis — Infrastructure Intelligence',
     description: 'Live public market intelligence for critical infrastructure sectors.',
     type: 'website',
   },
