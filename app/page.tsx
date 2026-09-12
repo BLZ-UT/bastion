@@ -3,11 +3,11 @@ import { ArrowRight, Gauge } from 'lucide-react'
 import { companies, companiesBySector, sectorConfig } from '@/data/companies'
 import { sectorSummary } from '@/data/chartData'
 import { insights } from '@/data/insights'
-import { episodes } from '@/data/podcasts'
 import { withLiveQuotes, sectorPerformanceFrom } from '@/lib/marketData'
+import { getLivePodcastEpisodes } from '@/lib/podcastFeed'
 import SectorIndexCard from '@/components/SectorIndexCard'
 import InsightCard from '@/components/InsightCard'
-import PodcastCard from '@/components/PodcastCard'
+import LivePodcastCard from '@/components/LivePodcastCard'
 import MarketPulse from '@/components/MarketPulse'
 import TickerBar from '@/components/TickerBar'
 
@@ -17,7 +17,10 @@ export default async function HomePage() {
   const sectors = Object.values(sectorConfig)
   const featuredInsights = insights.filter((i) => i.featured).slice(0, 3)
   const latestInsights = insights.slice(0, 4)
-  const featuredEpisodes = episodes.filter((e) => e.featured).slice(0, 2)
+  const featuredEpisodes = await getLivePodcastEpisodes(
+    'critical infrastructure founder investor podcast',
+    2
+  )
 
   const sectorPerformances = await Promise.all(
     sectors.map(async (sector) => {
@@ -89,7 +92,7 @@ export default async function HomePage() {
               { label: 'Tracked Companies', value: companies.length.toString() },
               { label: 'Sectors Covered', value: '5' },
               { label: 'Insights Published', value: insights.length.toString() },
-              { label: 'Podcast Episodes', value: episodes.length.toString() },
+              { label: 'Live Data Feeds', value: '3' },
             ].map(({ label, value }) => (
               <div key={label} className="pl-6 first:pl-0">
                 <div className="text-xl font-display font-bold text-txt-primary tabular-nums">{value}</div>
@@ -164,8 +167,8 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="space-y-4">
-              {featuredEpisodes.map((ep) => (
-                <PodcastCard key={ep.id} episode={ep} featured />
+              {featuredEpisodes.map((ep, i) => (
+                <LivePodcastCard key={`${ep.link}-${i}`} episode={ep} featured />
               ))}
             </div>
           </div>

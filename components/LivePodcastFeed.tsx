@@ -9,10 +9,9 @@ interface Props {
   limit?: number
 }
 
-/** Server component — pulls live podcast episodes so this section keeps surfacing
- *  new founder/investor conversations instead of only the curated back-catalog.
- *  Unlike the curated PodcastCard, these episodes carry a real audio file from the
- *  source feed, so they get an actual <audio> player rather than a link-only card. */
+/** Server component — a compact list view of live podcast episodes, used where
+ *  space is tight (e.g. alongside MarketPulse on a sector page). For the full
+ *  card layout, see LivePodcastCard. */
 export default async function LivePodcastFeed({ query, title, limit = 5 }: Props) {
   const episodes = await getLivePodcastEpisodes(query, limit)
 
