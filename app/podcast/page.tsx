@@ -6,7 +6,7 @@ import { Mic, Headphones } from 'lucide-react'
 import Rivets from '@/components/Rivets'
 
 export const dynamic = 'force-dynamic'
-export const metadata = { title: 'Podcast — INFRAANALYSIS' }
+export const metadata = { title: 'Podcast — infraAnalysis' }
 
 export default function PodcastPage() {
   const featured = episodes.filter((e) => e.featured)

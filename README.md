@@ -1,4 +1,4 @@
-# InfraAnalysis
+# infraAnalysis
 
 Live public market intelligence for critical infrastructure: Energy, Defense, AI Infrastructure,
 Space, and Cybersecurity. Sector indexes, comps tables, and market coverage refresh from live

@@ -7,7 +7,7 @@ import SectorIndexCard from '@/components/SectorIndexCard'
 import { cn, fmtPct } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
-export const metadata = { title: 'Indexes — INFRAANALYSIS' }
+export const metadata = { title: 'Indexes — infraAnalysis' }
 
 export default async function IndexesPage() {
   const sectors = Object.values(sectorConfig)
