@@ -1,16 +1,33 @@
-import { episodes } from '@/data/podcasts'
 import { sectorConfig } from '@/data/companies'
-import PodcastCard from '@/components/PodcastCard'
-import LivePodcastFeed from '@/components/LivePodcastFeed'
+import { getLivePodcastEpisodes, LiveEpisode } from '@/lib/podcastFeed'
+import LivePodcastCard from '@/components/LivePodcastCard'
 import { Mic, Headphones } from 'lucide-react'
 import Rivets from '@/components/Rivets'
 
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Podcast — infraAnalysis' }
 
-export default function PodcastPage() {
-  const featured = episodes.filter((e) => e.featured)
+function dedupe(episodes: LiveEpisode[]): LiveEpisode[] {
+  const seen = new Set<string>()
+  return episodes.filter((ep) => {
+    if (seen.has(ep.link)) return false
+    seen.add(ep.link)
+    return true
+  })
+}
+
+export default async function PodcastPage() {
   const sectors = Object.values(sectorConfig)
+
+  const [featured, ...bySector] = await Promise.all([
+    getLivePodcastEpisodes('critical infrastructure founder investor podcast', 4),
+    ...sectors.map((sector) =>
+      getLivePodcastEpisodes(`${sector.label} infrastructure founder investor podcast`, 4)
+    ),
+  ])
+
+  const sectorEpisodes = sectors.map((sector, i) => ({ sector, episodes: bySector[i] }))
+  const allEpisodes = dedupe([...featured, ...bySector.flat()]).slice(0, 12)
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -28,8 +45,9 @@ export default function PodcastPage() {
               Podcast
             </h1>
             <p className="text-base text-txt-secondary max-w-2xl leading-relaxed">
-              Conversations with founders, operators, investors, and policymakers building and
-              financing the infrastructure of tomorrow.
+              Real conversations with founders, operators, investors, and policymakers building and
+              financing the infrastructure of tomorrow — pulled live from public podcast search and
+              playable right here.
             </p>
           </div>
           {/* Subscribe button */}
@@ -62,59 +80,43 @@ export default function PodcastPage() {
             Featured Episodes
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {featured.map((ep) => (
-              <PodcastCard key={ep.id} episode={ep} featured />
+            {featured.map((ep, i) => (
+              <LivePodcastCard key={`${ep.link}-${i}`} episode={ep} featured />
             ))}
           </div>
         </div>
       )}
 
       {/* All episodes */}
-      <div className="mb-14">
-        <h2 className="text-xs font-mono text-txt-muted uppercase tracking-widest mb-4">
-          All Episodes
-        </h2>
-        <div className="space-y-3">
-          {episodes.map((ep) => (
-            <PodcastCard key={ep.id} episode={ep} featured />
-          ))}
+      {allEpisodes.length > 0 && (
+        <div className="mb-14">
+          <h2 className="text-xs font-mono text-txt-muted uppercase tracking-widest mb-4">
+            All Episodes
+          </h2>
+          <div className="space-y-3">
+            {allEpisodes.map((ep, i) => {
+              const match = sectorEpisodes.find((s) => s.episodes.some((e) => e.link === ep.link))
+              return (
+                <LivePodcastCard
+                  key={`${ep.link}-${i}`}
+                  episode={ep}
+                  sectorLabel={match?.sector.label}
+                  sectorColor={match?.sector.color}
+                  featured
+                />
+              )
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Live episode feed — new founder/investor conversations, pulled per sector */}
-      <div className="mb-14">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="h-px w-8 bg-accent opacity-60" />
-          <span className="text-xs font-mono text-accent tracking-widest uppercase">Live Feed</span>
+      {allEpisodes.length === 0 && (
+        <div className="mb-14 border border-border bg-bg-surface p-8 text-center panel-bevel">
+          <p className="text-sm text-txt-muted">
+            The live podcast feed is temporarily unavailable. Check back shortly.
+          </p>
         </div>
-        <h2 className="font-display font-bold text-xl text-txt-primary uppercase tracking-wide mb-2">
-          New From Founders &amp; Investors
-        </h2>
-        <p className="text-sm text-txt-secondary max-w-2xl leading-relaxed mb-6">
-          Pulled live from public podcast search, grouped by sector, so this page keeps surfacing
-          new founder- and investor-side conversations on critical infrastructure beyond our own
-          curated episodes above.
-        </p>
-
-        <div className="mb-5">
-          <LivePodcastFeed
-            query="critical infrastructure founder investor podcast"
-            title="Cross-Sector"
-            limit={6}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {sectors.map((sector) => (
-            <LivePodcastFeed
-              key={sector.id}
-              query={`${sector.label} infrastructure founder investor podcast`}
-              title={sector.label}
-              limit={4}
-            />
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* CTA */}
       <div className="mt-12 border border-border bg-bg-surface p-8 text-center relative panel-bevel">

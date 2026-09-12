@@ -28,8 +28,8 @@ interface ItunesResult {
 }
 
 /** Live podcast episodes via the iTunes Search API — no API key required.
- *  Used to keep the Podcast page stocked with fresh founder/investor
- *  conversations instead of only the curated back-catalog in data/podcasts.ts. */
+ *  This is the site's only source of podcast content: every episode returned
+ *  here has a real audio file, so nothing non-playable is ever shown. */
 export async function getLivePodcastEpisodes(query: string, limit = 5): Promise<LiveEpisode[]> {
   const cacheKey = `${query}::${limit}`
   const cached = feedCache.get(cacheKey)
