@@ -1,12 +1,13 @@
 import { insights } from '@/data/insights'
 import { sectorConfig } from '@/data/companies'
 import InsightCard from '@/components/InsightCard'
+import MarketPulse from '@/components/MarketPulse'
 
-export const metadata = { title: 'Insights — BASTION' }
+export const dynamic = 'force-dynamic'
+export const metadata = { title: 'Insights — INFRAANALYSIS' }
 
 export default function InsightsPage() {
   const featured = insights.filter((i) => i.featured)
-  const rest = insights.filter((i) => !i.featured)
   const sectors = Object.values(sectorConfig)
 
   return (
@@ -19,13 +20,18 @@ export default function InsightsPage() {
             Research
           </span>
         </div>
-        <h1 className="font-display font-bold text-3xl sm:text-4xl text-txt-primary mb-3">
+        <h1 className="font-display font-bold text-3xl sm:text-4xl text-txt-primary uppercase tracking-wide mb-3">
           Insights
         </h1>
         <p className="text-base text-txt-secondary max-w-2xl leading-relaxed">
           Original research and analysis on the companies, technologies, and forces shaping
-          critical infrastructure.
+          critical infrastructure — paired with a live headline feed so the page never goes stale.
         </p>
+      </div>
+
+      {/* Live headline feed */}
+      <div className="mb-10">
+        <MarketPulse query="infrastructure stocks energy defense AI cybersecurity space" limit={6} />
       </div>
 
       {/* Sector filter pills (visual only) */}

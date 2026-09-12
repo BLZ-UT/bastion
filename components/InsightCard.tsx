@@ -16,21 +16,21 @@ export default function InsightCard({ insight, featured }: Props) {
     <Link
       href={`/insights/${insight.id}`}
       className={cn(
-        'group block rounded-lg border border-border bg-bg-surface hover:bg-bg-elevated hover:border-border-bright transition-all duration-200',
+        'group block border border-border bg-bg-surface hover:bg-bg-elevated hover:border-border-bright transition-all duration-200 panel-bevel',
         featured ? 'p-6' : 'p-5'
       )}
     >
       <div className="flex items-center gap-2 mb-3">
         {sector && (
           <span
-            className="text-xs font-mono font-semibold px-2 py-0.5 rounded-sm"
-            style={{ color: sector.color, backgroundColor: `${sector.color}1a` }}
+            className="text-xs font-mono font-semibold px-2 py-0.5 border-l-2"
+            style={{ color: sector.color, backgroundColor: `${sector.color}1a`, borderColor: sector.color }}
           >
             {sector.label}
           </span>
         )}
         {insight.sector === 'cross-sector' && (
-          <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded-sm text-accent bg-accent/10">
+          <span className="text-xs font-mono font-semibold px-2 py-0.5 border-l-2 border-accent text-accent bg-accent/10">
             Cross-Sector
           </span>
         )}

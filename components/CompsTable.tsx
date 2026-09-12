@@ -11,11 +11,12 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import { ChevronUp, ChevronDown, ChevronsUpDown, Search, ExternalLink } from 'lucide-react'
-import { Company } from '@/data/companies'
+import { LiveCompany } from '@/lib/marketData'
 import { cn, fmtB, fmtMultiple, fmtPct, perfColor, marginColor } from '@/lib/utils'
+import LiveBadge from '@/components/LiveBadge'
 
 interface Props {
-  data: Company[]
+  data: LiveCompany[]
   sectorColor: string
 }
 
@@ -35,7 +36,7 @@ export default function CompsTable({ data, sectorColor }: Props) {
   const [sorting, setSorting] = useState<SortingState>([{ id: 'marketCap', desc: true }])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  const columns = useMemo<ColumnDef<Company>[]>(
+  const columns = useMemo<ColumnDef<LiveCompany>[]>(
     () => [
       {
         id: 'company',
@@ -52,6 +53,22 @@ export default function CompsTable({ data, sectorColor }: Props) {
             </span>
           </div>
         ),
+      },
+      {
+        id: 'price',
+        header: 'Price',
+        accessorFn: (row) => row.price ?? -1,
+        sortingFn: 'basic',
+        cell: ({ row }) => {
+          const { price, isLive } = row.original
+          if (price === null) return <Cell value="—" className="text-txt-muted" />
+          return (
+            <div className="flex items-center gap-1.5">
+              {isLive && <span className="live-dot" />}
+              <Cell value={`$${price.toFixed(2)}`} className="text-txt-primary" />
+            </div>
+          )
+        },
       },
       {
         id: 'marketCap',
@@ -202,16 +219,17 @@ export default function CompsTable({ data, sectorColor }: Props) {
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             placeholder="Filter companies..."
-            className="w-full pl-9 pr-3 py-2 rounded border border-border bg-bg-surface text-sm text-txt-primary placeholder:text-txt-muted focus:outline-none focus:border-border-bright focus:ring-1 focus:ring-border-bright transition-colors"
+            className="w-full pl-9 pr-3 py-2 border border-border bg-bg-surface text-sm text-txt-primary placeholder:text-txt-muted focus:outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/40 transition-colors"
           />
         </div>
-        <span className="text-xs font-mono text-txt-muted ml-auto">
+        <LiveBadge live={data.some((c) => c.isLive)} className="ml-auto" />
+        <span className="text-xs font-mono text-txt-muted">
           {table.getFilteredRowModel().rows.length} companies
         </span>
       </div>
 
       {/* Table */}
-      <div className="table-scroll rounded-lg border border-border overflow-hidden">
+      <div className="table-scroll border border-border overflow-hidden">
         <table className="w-full min-w-max">
           <thead>
             <tr className="border-b border-border bg-bg-surface">

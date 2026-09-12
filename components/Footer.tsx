@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Zap } from 'lucide-react'
+import { Gauge } from 'lucide-react'
 import { sectorConfig } from '@/data/companies'
 
 export default function Footer() {
@@ -7,20 +7,21 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-border bg-bg-surface mt-24">
+      <div className="hazard-stripe" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-7 h-7 rounded border border-accent/40 bg-accent/10 flex items-center justify-center">
-                <Zap className="w-3.5 h-3.5 text-accent" />
+            <Link href="/" className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 border-2 border-accent/50 bg-bg-elevated flex items-center justify-center">
+                <Gauge className="w-4 h-4 text-accent" />
               </div>
-              <span className="font-display font-bold text-base tracking-widest text-txt-primary">
-                BASTION
+              <span className="font-display font-bold text-base tracking-[0.15em] text-txt-primary uppercase">
+                InfraAnalysis
               </span>
             </Link>
             <p className="text-sm text-txt-secondary leading-relaxed">
-              Public market intelligence for critical infrastructure sectors.
+              Live public market intelligence for critical infrastructure sectors.
             </p>
           </div>
 
@@ -36,10 +37,7 @@ export default function Footer() {
                     href={sector.path}
                     className="text-sm text-txt-secondary hover:text-txt-primary transition-colors flex items-center gap-2"
                   >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: sector.color }}
-                    />
+                    <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: sector.color }} />
                     {sector.label}
                   </Link>
                 </li>
@@ -59,10 +57,7 @@ export default function Footer() {
                 { href: '/indexes', label: 'All Indexes' },
               ].map(({ href, label }) => (
                 <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-sm text-txt-secondary hover:text-txt-primary transition-colors"
-                  >
+                  <Link href={href} className="text-sm text-txt-secondary hover:text-txt-primary transition-colors">
                     {label}
                   </Link>
                 </li>
@@ -76,18 +71,19 @@ export default function Footer() {
               Disclaimer
             </h4>
             <p className="text-xs text-txt-muted leading-relaxed">
-              Data is for informational purposes only. Not investment advice. Market data may be
-              delayed. All figures approximate.
+              Price and return data are fetched live from public market feeds and may be delayed
+              or briefly unavailable. Fundamentals reflect the most recent public filings. Not
+              investment advice.
             </p>
           </div>
         </div>
 
         <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-txt-muted font-mono">
-            © {new Date().getFullYear()} BASTION. Infrastructure Intelligence.
+            © {new Date().getFullYear()} INFRAANALYSIS. Infrastructure Intelligence.
           </p>
           <p className="text-xs text-txt-dim font-mono">
-            Data as of May 2025 · For informational use only
+            Live market data · For informational use only
           </p>
         </div>
       </div>

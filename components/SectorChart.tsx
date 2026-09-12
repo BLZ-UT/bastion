@@ -33,7 +33,7 @@ function CustomTooltip({
   const val = payload[0].value
   const change = val - 100
   return (
-    <div className="bg-bg-elevated border border-border rounded-lg px-3 py-2 shadow-xl">
+    <div className="bg-bg-elevated border border-border px-3 py-2 shadow-xl">
       <p className="text-xs font-mono text-txt-muted mb-1">{label}</p>
       <p className="text-sm font-mono font-semibold" style={{ color }}>
         {val.toFixed(1)}
@@ -53,7 +53,7 @@ export default function SectorChart({ data, color, label }: Props) {
   const change = current - 100
 
   return (
-    <div className="rounded-lg border border-border bg-bg-surface p-6">
+    <div className="border border-border bg-bg-surface p-6 panel-bevel">
       <div className="flex items-start justify-between mb-6">
         <div>
           <p className="text-xs font-mono text-txt-muted uppercase tracking-widest mb-1">
@@ -84,16 +84,16 @@ export default function SectorChart({ data, color, label }: Props) {
               <stop offset="95%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(26,42,58,0.6)" vertical={false} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(82,67,49,0.5)" vertical={false} />
           <XAxis
             dataKey="month"
-            tick={{ fill: '#3d5166', fontSize: 10, fontFamily: 'var(--font-jetbrains-mono)' }}
-            axisLine={{ stroke: '#1a2a3a' }}
+            tick={{ fill: '#6b5f4e', fontSize: 10, fontFamily: 'var(--font-jetbrains-mono)' }}
+            axisLine={{ stroke: '#332c22' }}
             tickLine={false}
             interval={2}
           />
           <YAxis
-            tick={{ fill: '#3d5166', fontSize: 10, fontFamily: 'var(--font-jetbrains-mono)' }}
+            tick={{ fill: '#6b5f4e', fontSize: 10, fontFamily: 'var(--font-jetbrains-mono)' }}
             axisLine={false}
             tickLine={false}
             tickFormatter={(v) => `${v}`}
@@ -106,7 +106,7 @@ export default function SectorChart({ data, color, label }: Props) {
             strokeWidth={2}
             fill={`url(#gradient-${label})`}
             dot={false}
-            activeDot={{ r: 4, fill: color, stroke: '#0c1219', strokeWidth: 2 }}
+            activeDot={{ r: 4, fill: color, stroke: '#16130f', strokeWidth: 2 }}
           />
         </AreaChart>
       </ResponsiveContainer>
