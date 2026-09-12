@@ -6,6 +6,7 @@ import { withLiveQuotes, sectorPerformanceFrom } from '@/lib/marketData'
 import CompsTable from '@/components/CompsTable'
 import SectorChart from '@/components/SectorChart'
 import MarketPulse from '@/components/MarketPulse'
+import LivePodcastFeed from '@/components/LivePodcastFeed'
 import Rivets from '@/components/Rivets'
 import LiveBadge from '@/components/LiveBadge'
 import { cn, fmtPct } from '@/lib/utils'
@@ -88,10 +89,20 @@ export default async function SectorPage({ sectorId }: Props) {
         <CompsTable data={data} sectorColor={sector.color} />
       </div>
 
-      {/* Live market pulse for this sector */}
-      <div className="mb-10">
-        <p className="text-xs font-mono text-txt-muted uppercase tracking-widest mb-4">Live Coverage</p>
-        <MarketPulse query={`${sector.label} infrastructure stocks`} title={`${sector.label} Market Pulse`} />
+      {/* Live market pulse + podcast feed for this sector */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+        <div>
+          <p className="text-xs font-mono text-txt-muted uppercase tracking-widest mb-4">Live Coverage</p>
+          <MarketPulse query={`${sector.label} infrastructure stocks`} title={`${sector.label} Market Pulse`} />
+        </div>
+        <div>
+          <p className="text-xs font-mono text-txt-muted uppercase tracking-widest mb-4">Founders &amp; Investors</p>
+          <LivePodcastFeed
+            query={`${sector.label} infrastructure founder investor podcast`}
+            title={`${sector.label} Episodes`}
+            limit={4}
+          />
+        </div>
       </div>
 
       {/* Methodology note */}

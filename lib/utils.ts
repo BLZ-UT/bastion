@@ -41,6 +41,15 @@ export function marginColor(n: number, good = 20, ok = 0): string {
   return 'text-down'
 }
 
+export function fmtDuration(ms: number | null): string | null {
+  if (!ms || ms <= 0) return null
+  const totalMinutes = Math.round(ms / 60_000)
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+  if (hours > 0) return `${hours}h ${minutes}m`
+  return `${minutes} min`
+}
+
 export function timeAgo(dateString: string | null): string {
   if (!dateString) return ''
   const date = new Date(dateString)
