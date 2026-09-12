@@ -14,13 +14,13 @@ export default function PodcastCard({ episode, featured }: Props) {
   return (
     <div
       className={cn(
-        'group rounded-lg border border-border bg-bg-surface hover:bg-bg-elevated hover:border-border-bright transition-all duration-200',
+        'group border border-border bg-bg-surface hover:bg-bg-elevated hover:border-border-bright transition-all duration-200 panel-bevel',
         featured ? 'p-6' : 'p-5'
       )}
     >
       <div className="flex items-start gap-4">
         {/* Play button */}
-        <div className="flex-shrink-0 w-12 h-12 rounded-lg border border-border-bright bg-bg-elevated flex items-center justify-center group-hover:border-accent/40 group-hover:bg-accent/10 transition-all cursor-pointer">
+        <div className="flex-shrink-0 w-12 h-12 border border-border-bright bg-bg-elevated flex items-center justify-center group-hover:border-accent/50 group-hover:bg-accent/10 transition-all cursor-pointer">
           <Play className="w-4 h-4 text-txt-secondary group-hover:text-accent transition-colors ml-0.5" />
         </div>
 
@@ -29,14 +29,14 @@ export default function PodcastCard({ episode, featured }: Props) {
             <span className="text-xs font-mono text-txt-dim">EP {episode.episodeNumber}</span>
             {sector && (
               <span
-                className="text-xs font-mono font-semibold px-1.5 py-0.5 rounded-sm"
-                style={{ color: sector.color, backgroundColor: `${sector.color}1a` }}
+                className="text-xs font-mono font-semibold px-1.5 py-0.5 border-l-2"
+                style={{ color: sector.color, backgroundColor: `${sector.color}1a`, borderColor: sector.color }}
               >
                 {sector.label}
               </span>
             )}
             {episode.sector === 'cross-sector' && (
-              <span className="text-xs font-mono font-semibold px-1.5 py-0.5 rounded-sm text-accent bg-accent/10">
+              <span className="text-xs font-mono font-semibold px-1.5 py-0.5 border-l-2 border-accent text-accent bg-accent/10">
                 Cross-Sector
               </span>
             )}
@@ -75,7 +75,7 @@ export default function PodcastCard({ episode, featured }: Props) {
               {episode.topics.slice(0, 3).map((t) => (
                 <span
                   key={t}
-                  className="text-xs font-mono text-txt-dim bg-bg-base border border-border rounded px-1.5 py-0.5"
+                  className="text-xs font-mono text-txt-dim bg-bg-base border border-border px-1.5 py-0.5"
                 >
                   {t}
                 </span>

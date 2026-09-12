@@ -1,18 +1,20 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import { Barlow, Oswald, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
-const inter = Inter({
+const barlow = Barlow({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-barlow',
   display: 'swap',
 })
 
-const spaceGrotesk = Space_Grotesk({
+const oswald = Oswald({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-oswald',
   display: 'swap',
 })
 
@@ -23,9 +25,9 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'BASTION — Infrastructure Intelligence',
+  title: 'INFRAANALYSIS — Infrastructure Intelligence',
   description:
-    'Public market intelligence for critical infrastructure: Energy, Defense, AI Infrastructure, Space, and Cybersecurity.',
+    'Live public market intelligence for critical infrastructure: Energy, Defense, AI Infrastructure, Space, and Cybersecurity.',
   keywords: [
     'infrastructure',
     'energy',
@@ -37,8 +39,8 @@ export const metadata: Metadata = {
     'comps',
   ],
   openGraph: {
-    title: 'BASTION — Infrastructure Intelligence',
-    description: 'Public market intelligence for critical infrastructure sectors.',
+    title: 'INFRAANALYSIS — Infrastructure Intelligence',
+    description: 'Live public market intelligence for critical infrastructure sectors.',
     type: 'website',
   },
 }
@@ -47,9 +49,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${barlow.variable} ${oswald.variable} ${jetbrainsMono.variable}`}
     >
-      <body className="font-sans bg-bg-base text-txt-primary min-h-screen flex flex-col">
+      <body className="font-sans bg-bg-base text-txt-primary min-h-screen flex flex-col grain-overlay">
         <Navigation />
         <main className="flex-1">{children}</main>
         <Footer />

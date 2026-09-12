@@ -2,8 +2,9 @@ import { episodes } from '@/data/podcasts'
 import { sectorConfig } from '@/data/companies'
 import PodcastCard from '@/components/PodcastCard'
 import { Mic, Headphones } from 'lucide-react'
+import Rivets from '@/components/Rivets'
 
-export const metadata = { title: 'Podcast — BASTION' }
+export const metadata = { title: 'Podcast — INFRAANALYSIS' }
 
 export default function PodcastPage() {
   const featured = episodes.filter((e) => e.featured)
@@ -21,7 +22,7 @@ export default function PodcastPage() {
         </div>
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="font-display font-bold text-3xl sm:text-4xl text-txt-primary mb-3">
+            <h1 className="font-display font-bold text-3xl sm:text-4xl text-txt-primary uppercase tracking-wide mb-3">
               Podcast
             </h1>
             <p className="text-base text-txt-secondary max-w-2xl leading-relaxed">
@@ -30,7 +31,7 @@ export default function PodcastPage() {
             </p>
           </div>
           {/* Subscribe button */}
-          <div className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded border border-border bg-bg-surface text-txt-secondary text-sm hover:border-border-bright hover:text-txt-primary transition-all cursor-pointer flex-shrink-0 mt-2">
+          <div className="hidden sm:flex items-center gap-2 px-4 py-2.5 border border-border bg-bg-surface text-txt-secondary text-sm hover:border-border-bright hover:text-txt-primary transition-all cursor-pointer flex-shrink-0 mt-2">
             <Headphones className="w-4 h-4" />
             Subscribe
           </div>
@@ -79,9 +80,10 @@ export default function PodcastPage() {
       </div>
 
       {/* CTA */}
-      <div className="mt-12 rounded-lg border border-border bg-bg-surface p-8 text-center">
+      <div className="mt-12 border border-border bg-bg-surface p-8 text-center relative panel-bevel">
+        <Rivets />
         <Mic className="w-8 h-8 text-txt-muted mx-auto mb-4" />
-        <h3 className="font-display font-bold text-xl text-txt-primary mb-2">
+        <h3 className="font-display font-bold text-xl text-txt-primary uppercase tracking-wide mb-2">
           Know someone we should talk to?
         </h3>
         <p className="text-txt-secondary text-sm mb-6 max-w-md mx-auto">
@@ -89,8 +91,8 @@ export default function PodcastPage() {
           critical infrastructure. Reach out.
         </p>
         <a
-          href="mailto:podcast@bastion.io"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded border border-border bg-bg-elevated text-txt-secondary text-sm hover:border-border-bright hover:text-txt-primary transition-all"
+          href="mailto:podcast@infraanalysis.io"
+          className="inline-flex items-center gap-2 px-5 py-2.5 border border-border bg-bg-elevated text-txt-secondary text-sm hover:border-accent/50 hover:text-txt-primary transition-all"
         >
           Get in touch
         </a>

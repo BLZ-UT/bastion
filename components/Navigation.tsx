@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronDown, Menu, X, Zap } from 'lucide-react'
+import { ChevronDown, Menu, X, Gauge } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { sectorConfig } from '@/data/companies'
 
@@ -17,19 +17,19 @@ export default function Navigation() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-bg-base/90 backdrop-blur-md">
-      {/* Top accent line */}
-      <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-60" />
+    <header className="sticky top-0 z-50 border-b border-border bg-bg-base/95 backdrop-blur-md">
+      {/* Top hazard accent */}
+      <div className="hazard-stripe" />
 
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded border border-accent/40 bg-accent/10 flex items-center justify-center group-hover:border-accent/70 group-hover:bg-accent/20 transition-all">
-              <Zap className="w-3.5 h-3.5 text-accent" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-8 h-8 border-2 border-accent/50 bg-bg-elevated flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all">
+              <Gauge className="w-4 h-4 text-accent" />
             </div>
-            <span className="font-display font-bold text-base tracking-widest text-txt-primary">
-              BASTION
+            <span className="font-display font-bold text-lg tracking-[0.15em] text-txt-primary uppercase">
+              InfraAnalysis
             </span>
           </Link>
 
@@ -41,9 +41,9 @@ export default function Navigation() {
                 onMouseEnter={() => setIndexesOpen(true)}
                 onClick={() => setIndexesOpen(!indexesOpen)}
                 className={cn(
-                  'flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-colors',
+                  'flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium tracking-wide transition-colors',
                   isActive('/indexes')
-                    ? 'text-txt-primary bg-bg-surface'
+                    ? 'text-accent bg-bg-surface'
                     : 'text-txt-secondary hover:text-txt-primary hover:bg-bg-surface'
                 )}
               >
@@ -54,12 +54,12 @@ export default function Navigation() {
               </button>
 
               {indexesOpen && (
-                <div className="absolute top-full left-0 mt-1 w-64 rounded-lg border border-border bg-bg-surface shadow-xl shadow-black/50 overflow-hidden">
+                <div className="absolute top-full left-0 mt-1 w-64 border border-border bg-bg-surface shadow-xl shadow-black/60 overflow-hidden">
                   <div className="p-2">
                     <Link
                       href="/indexes"
                       onClick={() => setIndexesOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 rounded text-sm text-txt-secondary hover:text-txt-primary hover:bg-bg-elevated transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-txt-secondary hover:text-txt-primary hover:bg-bg-elevated transition-colors"
                     >
                       All Indexes Overview
                     </Link>
@@ -69,10 +69,10 @@ export default function Navigation() {
                         key={sector.id}
                         href={sector.path}
                         onClick={() => setIndexesOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2 rounded text-sm hover:bg-bg-elevated transition-colors group"
+                        className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-bg-elevated transition-colors group"
                       >
                         <span
-                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          className="w-2 h-2 flex-shrink-0"
                           style={{ backgroundColor: sector.color }}
                         />
                         <span className="text-txt-secondary group-hover:text-txt-primary transition-colors">
@@ -88,9 +88,9 @@ export default function Navigation() {
             <Link
               href="/insights"
               className={cn(
-                'px-3 py-1.5 rounded text-sm font-medium transition-colors',
+                'px-3 py-1.5 text-sm font-medium tracking-wide transition-colors',
                 isActive('/insights')
-                  ? 'text-txt-primary bg-bg-surface'
+                  ? 'text-accent bg-bg-surface'
                   : 'text-txt-secondary hover:text-txt-primary hover:bg-bg-surface'
               )}
             >
@@ -100,9 +100,9 @@ export default function Navigation() {
             <Link
               href="/podcast"
               className={cn(
-                'px-3 py-1.5 rounded text-sm font-medium transition-colors',
+                'px-3 py-1.5 text-sm font-medium tracking-wide transition-colors',
                 isActive('/podcast')
-                  ? 'text-txt-primary bg-bg-surface'
+                  ? 'text-accent bg-bg-surface'
                   : 'text-txt-secondary hover:text-txt-primary hover:bg-bg-surface'
               )}
             >
@@ -113,7 +113,7 @@ export default function Navigation() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded text-txt-secondary hover:text-txt-primary hover:bg-bg-surface transition-colors"
+            className="md:hidden p-2 text-txt-secondary hover:text-txt-primary hover:bg-bg-surface transition-colors"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -127,7 +127,7 @@ export default function Navigation() {
             <Link
               href="/indexes"
               onClick={() => setMobileOpen(false)}
-              className="block px-3 py-2 rounded text-sm text-txt-secondary hover:text-txt-primary hover:bg-bg-elevated transition-colors"
+              className="block px-3 py-2 text-sm text-txt-secondary hover:text-txt-primary hover:bg-bg-elevated transition-colors"
             >
               All Indexes
             </Link>
@@ -136,12 +136,9 @@ export default function Navigation() {
                 key={sector.id}
                 href={sector.path}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-2 px-3 py-2 rounded text-sm text-txt-muted hover:text-txt-primary hover:bg-bg-elevated transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-sm text-txt-muted hover:text-txt-primary hover:bg-bg-elevated transition-colors"
               >
-                <span
-                  className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: sector.color }}
-                />
+                <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: sector.color }} />
                 {sector.label}
               </Link>
             ))}
@@ -149,14 +146,14 @@ export default function Navigation() {
             <Link
               href="/insights"
               onClick={() => setMobileOpen(false)}
-              className="block px-3 py-2 rounded text-sm text-txt-secondary hover:text-txt-primary hover:bg-bg-elevated transition-colors"
+              className="block px-3 py-2 text-sm text-txt-secondary hover:text-txt-primary hover:bg-bg-elevated transition-colors"
             >
               Insights
             </Link>
             <Link
               href="/podcast"
               onClick={() => setMobileOpen(false)}
-              className="block px-3 py-2 rounded text-sm text-txt-secondary hover:text-txt-primary hover:bg-bg-elevated transition-colors"
+              className="block px-3 py-2 text-sm text-txt-secondary hover:text-txt-primary hover:bg-bg-elevated transition-colors"
             >
               Podcast
             </Link>

@@ -2,13 +2,22 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { companiesBySector, sectorConfig } from '@/data/companies'
 import { sectorSummary } from '@/data/chartData'
+import { withLiveQuotes, sectorPerformanceFrom } from '@/lib/marketData'
 import SectorIndexCard from '@/components/SectorIndexCard'
-import { cn, fmtPct, perfColor } from '@/lib/utils'
+import { cn, fmtPct } from '@/lib/utils'
 
-export const metadata = { title: 'Indexes — BASTION' }
+export const dynamic = 'force-dynamic'
+export const metadata = { title: 'Indexes — INFRAANALYSIS' }
 
-export default function IndexesPage() {
+export default async function IndexesPage() {
   const sectors = Object.values(sectorConfig)
+
+  const performances = await Promise.all(
+    sectors.map(async (sector) => {
+      const live = await withLiveQuotes(companiesBySector(sector.id))
+      return sectorPerformanceFrom(live, sectorSummary[sector.id])
+    })
+  )
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -20,32 +29,33 @@ export default function IndexesPage() {
             Public Markets
           </span>
         </div>
-        <h1 className="font-display font-bold text-3xl sm:text-4xl text-txt-primary mb-3">
+        <h1 className="font-display font-bold text-3xl sm:text-4xl text-txt-primary uppercase tracking-wide mb-3">
           Infrastructure Indexes
         </h1>
         <p className="text-base text-txt-secondary max-w-2xl leading-relaxed">
           Five sector indexes tracking public companies at the frontier of critical infrastructure.
-          Equal-weighted baskets indexed to January 2024.
+          Equal-weighted baskets, refreshed live from public market data.
         </p>
       </div>
 
       {/* Sector cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-14">
-        {sectors.map((sector) => (
+        {sectors.map((sector, i) => (
           <SectorIndexCard
             key={sector.id}
             sector={sector}
             companyCount={companiesBySector(sector.id).length}
+            performance={performances[i]}
           />
         ))}
       </div>
 
       {/* Combined performance table */}
       <div>
-        <h2 className="font-display font-bold text-xl text-txt-primary mb-5">
+        <h2 className="font-display font-bold text-xl text-txt-primary uppercase tracking-wide mb-5">
           Index Performance Comparison
         </h2>
-        <div className="rounded-lg border border-border overflow-hidden">
+        <div className="border border-border overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-bg-surface">
@@ -61,9 +71,7 @@ export default function IndexesPage() {
             </thead>
             <tbody>
               {sectors.map((sector, i) => {
-                const summary = sectorSummary[sector.id]
-                const companies = companiesBySector(sector.id)
-                const avg1M = companies.reduce((s, c) => s + c.return1M, 0) / companies.length
+                const perf = performances[i]
 
                 return (
                   <tr
@@ -74,12 +82,9 @@ export default function IndexesPage() {
                     )}
                   >
                     <td className="px-5 py-4">
-                      <Link
-                        href={sector.path}
-                        className="flex items-center gap-2.5 group"
-                      >
+                      <Link href={sector.path} className="flex items-center gap-2.5 group">
                         <span
-                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                          className="w-2.5 h-2.5 flex-shrink-0"
                           style={{ backgroundColor: sector.color }}
                         />
                         <span className="font-medium text-sm text-txt-primary group-hover:text-white transition-colors">
@@ -88,10 +93,11 @@ export default function IndexesPage() {
                         <ArrowRight className="w-3 h-3 text-txt-muted opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                       </Link>
                     </td>
-                    {[avg1M, summary.threeMonth, summary.oneYear, summary.ytd].map((v, j) => (
+                    {[perf.oneMonth, perf.threeMonth, perf.oneYear, perf.ytd].map((v, j) => (
                       <td key={j} className="px-5 py-4">
-                        <span className={cn('text-sm font-mono tabular-nums font-semibold', perfColor(v))}>
-                          {v >= 0 ? '+' : ''}{fmtPct(v)}
+                        <span className={cn('text-sm font-mono tabular-nums font-semibold', v >= 0 ? 'text-up' : 'text-down')}>
+                          {v >= 0 ? '+' : ''}
+                          {fmtPct(v)}
                         </span>
                       </td>
                     ))}
@@ -105,7 +111,8 @@ export default function IndexesPage() {
           </table>
         </div>
         <p className="mt-3 text-xs font-mono text-txt-dim">
-          Equal-weighted basket performance. Indexed to Jan 2024. Approximate. Not investment advice.
+          Equal-weighted basket performance. 1M/3M/1Y refresh from live prices when available; YTD is
+          anchored to the Jan 2024 baseline. Approximate. Not investment advice.
         </p>
       </div>
     </div>
