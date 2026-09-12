@@ -75,7 +75,14 @@ export default async function InsightDetailPage({ params }: Props) {
       {/* Body */}
       <div className="border border-border bg-bg-surface p-6 sm:p-8 relative panel-bevel mb-8">
         <Rivets />
-        <p className="text-lg text-txt-primary leading-relaxed">{insight.excerpt}</p>
+        <p className="text-lg text-txt-primary leading-relaxed font-medium mb-6">{insight.excerpt}</p>
+        <div className="space-y-5">
+          {insight.content.map((paragraph, i) => (
+            <p key={i} className="text-base text-txt-secondary leading-relaxed">
+              {paragraph}
+            </p>
+          ))}
+        </div>
       </div>
 
       {/* Tags */}

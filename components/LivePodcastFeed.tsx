@@ -10,7 +10,9 @@ interface Props {
 }
 
 /** Server component — pulls live podcast episodes so this section keeps surfacing
- *  new founder/investor conversations instead of only the curated back-catalog. */
+ *  new founder/investor conversations instead of only the curated back-catalog.
+ *  Unlike the curated PodcastCard, these episodes carry a real audio file from the
+ *  source feed, so they get an actual <audio> player rather than a link-only card. */
 export default async function LivePodcastFeed({ query, title, limit = 5 }: Props) {
   const episodes = await getLivePodcastEpisodes(query, limit)
 
@@ -31,12 +33,12 @@ export default async function LivePodcastFeed({ query, title, limit = 5 }: Props
       </div>
       <ul className="divide-y divide-border/60">
         {episodes.map((ep, i) => (
-          <li key={`${ep.link}-${i}`}>
+          <li key={`${ep.link}-${i}`} className="px-5 py-3">
             <a
               href={ep.link}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="group flex items-start gap-3 px-5 py-3 hover:bg-bg-elevated transition-colors"
+              className="group flex items-start gap-3 hover:bg-bg-elevated -mx-5 px-5 py-1 transition-colors"
             >
               <span className="text-xs font-mono text-txt-dim mt-0.5 flex-shrink-0">
                 {String(i + 1).padStart(2, '0')}
@@ -53,6 +55,11 @@ export default async function LivePodcastFeed({ query, title, limit = 5 }: Props
               </span>
               <ExternalLink className="w-3 h-3 text-txt-dim group-hover:text-accent flex-shrink-0 mt-1 transition-colors" />
             </a>
+            {ep.audioUrl && (
+              <audio controls preload="none" src={ep.audioUrl} className="w-full h-8 mt-2">
+                Your browser does not support inline audio playback.
+              </audio>
+            )}
           </li>
         ))}
       </ul>

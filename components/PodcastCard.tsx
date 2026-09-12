@@ -1,4 +1,4 @@
-import { Play, Clock, Mic } from 'lucide-react'
+import { Clock, Mic } from 'lucide-react'
 import { Episode } from '@/data/podcasts'
 import { sectorConfig } from '@/data/companies'
 import { cn } from '@/lib/utils'
@@ -19,9 +19,10 @@ export default function PodcastCard({ episode, featured }: Props) {
       )}
     >
       <div className="flex items-start gap-4">
-        {/* Play button */}
-        <div className="flex-shrink-0 w-12 h-12 border border-border-bright bg-bg-elevated flex items-center justify-center group-hover:border-accent/50 group-hover:bg-accent/10 transition-all cursor-pointer">
-          <Play className="w-4 h-4 text-txt-secondary group-hover:text-accent transition-colors ml-0.5" />
+        {/* Show-notes indicator — these curated episodes are written summaries, not
+            recorded audio, so this is deliberately not a play button. */}
+        <div className="flex-shrink-0 w-12 h-12 border border-border-bright bg-bg-elevated flex items-center justify-center">
+          <Mic className="w-4 h-4 text-txt-muted" />
         </div>
 
         <div className="flex-1 min-w-0">
