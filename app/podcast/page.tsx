@@ -1,7 +1,8 @@
 import { sectorConfig } from '@/data/companies'
 import { getLivePodcastEpisodes, LiveEpisode } from '@/lib/podcastFeed'
 import PodcastBrowser from '@/components/PodcastBrowser'
-import { Mic, Headphones } from 'lucide-react'
+import SubscribeButton from '@/components/SubscribeButton'
+import { Mic } from 'lucide-react'
 import Rivets from '@/components/Rivets'
 
 export const dynamic = 'force-dynamic'
@@ -55,11 +56,7 @@ export default async function PodcastPage() {
               playable right here.
             </p>
           </div>
-          {/* Subscribe button */}
-          <div className="hidden sm:flex items-center gap-2 px-4 py-2.5 border border-border bg-bg-surface text-txt-secondary text-sm hover:border-border-bright hover:text-txt-primary transition-all cursor-pointer flex-shrink-0 mt-2">
-            <Headphones className="w-4 h-4" />
-            Subscribe
-          </div>
+          <SubscribeButton source="podcast" />
         </div>
       </div>
 
